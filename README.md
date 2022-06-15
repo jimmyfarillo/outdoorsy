@@ -34,24 +34,24 @@ npm start
 ```
 
 You will be asked a series of questions:
-1. **What is the full path to the file?**
-  - Enter the full path to the file that contains the customer data you would
+`**What is the full path to the file?**`
+  Enter the full path to the file that contains the customer data you would
   like to view. There are several test data files located in `test/data/` that
   can be used to test the output of the CLI tool. For example, you could type
   `./test/data/commas.txt` and hit enter.
-1. **Is the first line of the file the headers?**
-  - If your data file contains named headers as the first line of the file,
+`**Is the first line of the file the headers?**`
+  If your data file contains named headers as the first line of the file,
   then type `y` and hit enter. If your data file does not contain headers, then
   type `n` and hit enter.
-1. **Sort customers by:**
-  - Use the up/down arrow keys to select the data column that you would like
+`**Sort customers by:**`
+  Use the up/down arrow keys to select the data column that you would like
   the data to be sorted by.
-2. **Sort ascending or descending:**
-  - Use the up/down arrow keys to select whether the data should be sorted
+`**Sort ascending or descending:**`
+  Use the up/down arrow keys to select whether the data should be sorted
   ascending or descending by the column you chose in the previous question.
 
 
-## Building
+## Build
 
 To build the program without running it, run the following command:
 ```
