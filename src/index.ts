@@ -18,6 +18,7 @@ type Answers = {
   filename: string;
   includesHeaders: boolean;
   sortBy: string;
+  sortOrder: string;
 };
 
 type RawCustomerData = {
@@ -42,7 +43,12 @@ async function main(): Promise<void> {
       const includesHeaders = process.argv[includesHeadersIndex].toLowerCase() === 'y' ? true : false;
       const sortBy = process.argv[sortByIndex] || CustomerList.sortByOptions.CUSTOMER_NAME;
 
-      answers = { filename, includesHeaders, sortBy } as Answers;
+      answers = {
+        filename,
+        includesHeaders,
+        sortBy,
+        sortOrder: 'asc',
+      } as Answers;
     } else {
       answers = await askQuestions();
     }
@@ -74,7 +80,7 @@ async function main(): Promise<void> {
     });
 
     rl.on('close', (): void => {
-      customerList.sort(answers.sortBy);
+      customerList.sort(answers.sortBy, answers.sortOrder === 'asc');
       customerList.printTable();
       process.exit(0);
     });
@@ -116,10 +122,18 @@ async function askQuestions(): Promise<Answers> {
         { name: 'Vehicle Length', value: 'vehicleLength' },
       ],
     },
+    {
+      type: 'list',
+      name: 'sortOrder',
+      message: 'Sort ascending or descending:',
+      choices: [
+        { name: 'Ascending', value: 'asc' },
+        { name: 'Descending', value: 'desc' },
+      ],
+    },
   ];
 
   return inquirer.prompt(questions);
 };
-
 
 main();
