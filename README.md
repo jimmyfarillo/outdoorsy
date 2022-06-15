@@ -102,7 +102,7 @@ Some assumptions I made to arrive at this completed solution:
 - After printing the customer list, users will likely not need to continue
 sorting and interacting with the data -- the program exits right after printing
 the customer data.
-- Customer name follows the Western format of "<first name> <last name>".
+- Customer name follows the Western format of "first_name last_name".
 
 ## Additional Features
 
@@ -117,7 +117,7 @@ quantities. For example, a 12ft vehicle is considered smaller than a 13in
 vehicle.)
 - Ability to include named headers as the first line in the input file.
 - Normalization of the vehicle length format:
-"<quantity> <standard unit abbreviation>"
+"quantity standardized_unit_abbreviation"
 - Supports integer and float vehicle lengths.
 
 ### Technologies
