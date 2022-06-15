@@ -3,6 +3,8 @@
 A simple interactive command-line tool for sorting and displaying a table of
 customer data.
 
+![Command-Line Tool Screenshot](./screenshot.png)
+
 _Completed as a code project for The Wanderlust Group interview process._
 
 
