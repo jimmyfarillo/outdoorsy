@@ -28,6 +28,8 @@ export class CustomerList implements ICustomerList {
     this.customers.push(customer);
   }
 
+  // Sorts the array of customers based on the column and whether ascending
+  // or descending.
   sort(sortBy: string = 'customerName', asc = true): void {
     const comparePropFn = (customer: ICustomer) => {
       if (sortBy === CustomerList.sortByOptions.VEHICLE_TYPE) {
@@ -59,6 +61,7 @@ export class CustomerList implements ICustomerList {
     });
   }
 
+  // Creates a table of the customer data and prints to STDOUT.
   printTable(): void {
     const table = new Table();
 

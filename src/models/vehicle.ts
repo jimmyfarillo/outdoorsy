@@ -55,10 +55,15 @@ export class Vehicle implements IVehicle {
     return `${this.lengthQuantity}${this.lengthUnit ? ` ${this.lengthUnit}`: ''}`;
   }
 
+  // Parses and returns the length number from the length string. Supports
+  // integers and floats.
   private parseLengthQuantity(lengthString: string): number {
     return Number.parseFloat(lengthString);
   }
 
+  // Parse and returns the length unit from the length string. If the unit
+  // marking is not supported, retains the original unit marking. If no unit
+  // marking is present, return and empty string.
   private parseLengthUnit(lengthString: string): string {
     const unitRegex = /[^\d\s\.]+/;
     const unitMatch = lengthString.match(unitRegex);

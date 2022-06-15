@@ -3,6 +3,8 @@ import { VALID_DELIMITERS } from './validDelimiters';
 
 const defaultHeadersSet = new Set(VALID_HEADERS);
 
+// Takes a string and returns the first supported delimiter found. Throws an
+// exception if a supported delimiter is not found.
 export function getDelimiter(line: string): string {
   const delimiter = VALID_DELIMITERS.find((d) => line.includes(d));
 
@@ -13,6 +15,7 @@ export function getDelimiter(line: string): string {
   return delimiter;
 }
 
+// Takes an array of headers and an array of data and zips them into an object.
 export function objectFromLine(
   headers: string[],
   lineData: string[],
@@ -33,6 +36,8 @@ export function objectFromLine(
   }, {});
 }
 
+// Takes an array of headers and throws if the headers do not contain all of
+// the valid headers.
 export function validateHeaders(headers: string[]): void {
   const headersSet = new Set(headers);
 

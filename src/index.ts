@@ -34,6 +34,10 @@ async function main(): Promise<void> {
   try {
     let answers: Answers;
 
+    // If the program is run with additional flags, this prevents the program
+    // from running in interactive mode. The flags will determine how the data
+    // is displayed.
+    // This is primarily for automated testing purposes.
     if (process.argv.length > 2) {
       const filenameIndex = process.argv.indexOf('-f') + 1;
       const includesHeadersIndex = process.argv.indexOf('-h') + 1;
@@ -60,6 +64,8 @@ async function main(): Promise<void> {
     let headers: string[] | null = !answers.includesHeaders ? VALID_HEADERS : null;
     let delimiter: string;
 
+    // Reads the data file line-by-line and adds the resulting customer to the
+    // customer list.
     rl.on('line', (line: string): void => {
       if (!delimiter) {
         delimiter = getDelimiter(line);
@@ -79,6 +85,8 @@ async function main(): Promise<void> {
       customerList.addCustomer(customer);
     });
 
+    // When the end of the file is reached, sorts the customer list and prints
+    // the table of data.
     rl.on('close', (): void => {
       customerList.sort(answers.sortBy, answers.sortOrder === 'asc');
       customerList.printTable();
@@ -89,7 +97,7 @@ async function main(): Promise<void> {
   }
 }
 
-
+// Uses the inquirer library to prompt the user for input.
 async function askQuestions(): Promise<Answers> {
   const questions = [
     {
