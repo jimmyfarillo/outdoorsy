@@ -60,24 +60,24 @@ describe('Vehicle', () => {
       let vehicle: IVehicle = new Vehicle(name, typeName, "15'");
       expect(vehicle.length).to.eq('15 ft');
 
-      vehicle = new Vehicle(name, typeName, "20 feet");
+      vehicle = new Vehicle(name, typeName, '20 feet');
       expect(vehicle.length).to.eq('20 ft');
 
-      vehicle = new Vehicle(name, typeName, "10ft");
+      vehicle = new Vehicle(name, typeName, '10ft');
       expect(vehicle.length).to.eq('10 ft');
 
-      vehicle = new Vehicle(name, typeName, "1 foot");
+      vehicle = new Vehicle(name, typeName, '1 foot');
       expect(vehicle.length).to.eq('1 ft');
     });
 
     it('handles multiple meter markings', () => {
-      let vehicle: IVehicle = new Vehicle(name, typeName, "15m");
+      let vehicle: IVehicle = new Vehicle(name, typeName, '15m');
       expect(vehicle.length).to.eq('15 m');
 
-      vehicle = new Vehicle(name, typeName, "20 meters");
+      vehicle = new Vehicle(name, typeName, '20 meters');
       expect(vehicle.length).to.eq('20 m');
 
-      vehicle = new Vehicle(name, typeName, "1 meter");
+      vehicle = new Vehicle(name, typeName, '1 meter');
       expect(vehicle.length).to.eq('1 m');
     });
 

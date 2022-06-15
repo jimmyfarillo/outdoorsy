@@ -9,7 +9,7 @@ export function getDelimiter(line: string): string {
   const delimiter = VALID_DELIMITERS.find((d) => line.includes(d));
 
   if (!delimiter) {
-    throw 'Valid data delimiter not found';
+    throw new Error('Valid data delimiter not found');
   }
 
   return delimiter;
@@ -21,7 +21,7 @@ export function objectFromLine(
   lineData: string[],
 ): { [key: string]: any } {
   if (lineData.length !== headers.length) {
-    throw `Invalid data: ${lineData}`;
+    throw new Error(`Invalid data: ${lineData}`);
   }
 
   return lineData.reduce((obj, data, i) => {
@@ -42,12 +42,12 @@ export function validateHeaders(headers: string[]): void {
   const headersSet = new Set(headers);
 
   if (defaultHeadersSet.size > headersSet.size) {
-    throw 'Invalid headers';
+    throw new Error('Invalid headers');
   }
 
-  for (const header of defaultHeadersSet) {
+  defaultHeadersSet.forEach((header) => {
     if (!headersSet.has(header)) {
-      throw 'Invalid headers';
+      throw new Error('Invalid headers');
     }
-  }
+  });
 }

@@ -34,17 +34,23 @@ export class CustomerList implements ICustomerList {
     const comparePropFn = (customer: ICustomer) => {
       if (sortBy === CustomerList.sortByOptions.VEHICLE_TYPE) {
         return customer.vehicle.typeName.toLowerCase();
-      } else if (sortBy === CustomerList.sortByOptions.VEHICLE_TYPE) {
+      }
+
+      if (sortBy === CustomerList.sortByOptions.VEHICLE_NAME) {
         return customer.vehicle.name.toLowerCase();
-      } else if (sortBy === CustomerList.sortByOptions.VEHICLE_LENGTH) {
+      }
+
+      if (sortBy === CustomerList.sortByOptions.VEHICLE_LENGTH) {
         // Currently only able to reliably sort by vehicle length when all
         // vehicle lengths use the same unit of measurement.
         return customer.vehicle.lengthQuantity;
-      } else if (sortBy === CustomerList.sortByOptions.CUSTOMER_EMAIL) {
-        return customer.email.toLowerCase();
-      } else {
-        return customer.fullName.toLowerCase();
       }
+
+      if (sortBy === CustomerList.sortByOptions.CUSTOMER_EMAIL) {
+        return customer.email.toLowerCase();
+      }
+
+      return customer.fullName.toLowerCase();
     };
 
     this.customers.sort((customerA: ICustomer, customerB: ICustomer) => {
@@ -53,7 +59,9 @@ export class CustomerList implements ICustomerList {
 
       if (a < b) {
         return asc ? -1 : 1;
-      } else if (a > b) {
+      }
+
+      if (a > b) {
         return asc ? 1 : -1;
       }
 
@@ -65,15 +73,15 @@ export class CustomerList implements ICustomerList {
   printTable(): void {
     const table = new Table();
 
-    for (const customer of this.customers) {
+    this.customers.forEach((customer) => {
       table.addRow({
-        'Name': customer.fullName,
-        'Email': customer.email,
+        Name: customer.fullName,
+        Email: customer.email,
         'Vehicle Type': customer.vehicle.typeName,
         'Vehicle Name': customer.vehicle.name,
         'Vehicle Length': customer.vehicle.length,
       });
-    }
+    });
 
     table.printTable();
   }

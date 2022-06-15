@@ -1,6 +1,6 @@
 export enum VehicleLengthUnitEnum {
-  FEET = "ft",
-  METERS = "m",
+  FEET = 'ft',
+  METERS = 'm',
 }
 
 const VEHICLE_LENGTH_UNIT_MAP = new Map([
@@ -52,7 +52,7 @@ export class Vehicle implements IVehicle {
   }
 
   get length() {
-    return `${this.lengthQuantity}${this.lengthUnit ? ` ${this.lengthUnit}`: ''}`;
+    return `${this.lengthQuantity}${this.lengthUnit ? ` ${this.lengthUnit}` : ''}`;
   }
 
   // Parses and returns the length number from the length string. Supports

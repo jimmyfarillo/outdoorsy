@@ -30,73 +30,6 @@ type RawCustomerData = {
   vehicleLength: string;
 };
 
-async function main(): Promise<void> {
-  try {
-    let answers: Answers;
-
-    // If the program is run with additional flags, this prevents the program
-    // from running in interactive mode. The flags will determine how the data
-    // is displayed.
-    // This is primarily for automated testing purposes.
-    if (process.argv.length > 2) {
-      const filenameIndex = process.argv.indexOf('-f') + 1;
-      const includesHeadersIndex = process.argv.indexOf('-h') + 1;
-      const sortByIndex = process.argv.indexOf('-s') + 1;
-
-      const filename = process.argv[filenameIndex];
-      const includesHeaders = process.argv[includesHeadersIndex].toLowerCase() === 'y' ? true : false;
-      const sortBy = process.argv[sortByIndex] || CustomerList.sortByOptions.CUSTOMER_NAME;
-
-      answers = {
-        filename,
-        includesHeaders,
-        sortBy,
-        sortOrder: 'asc',
-      } as Answers;
-    } else {
-      answers = await askQuestions();
-    }
-
-    const input: fs.ReadStream = fs.createReadStream(answers.filename);
-    const rl: readline.Interface = readline.createInterface({ input });
-
-    const customerList: ICustomerList = new CustomerList();
-    let headers: string[] | null = !answers.includesHeaders ? VALID_HEADERS : null;
-    let delimiter: string;
-
-    // Reads the data file line-by-line and adds the resulting customer to the
-    // customer list.
-    rl.on('line', (line: string): void => {
-      if (!delimiter) {
-        delimiter = getDelimiter(line);
-      }
-
-      const lineData: string[] = line.split(delimiter);
-
-      if (!headers) {
-        headers = lineData;
-        validateHeaders(headers);
-        return;
-      }
-
-      const rawData: RawCustomerData = objectFromLine(headers, lineData) as RawCustomerData;
-      const vehicle: IVehicle = new Vehicle(rawData.vehicleName, rawData.vehicleType, rawData.vehicleLength);
-      const customer: ICustomer = new Customer(rawData.firstName, rawData.lastName, rawData.email, vehicle);
-      customerList.addCustomer(customer);
-    });
-
-    // When the end of the file is reached, sorts the customer list and prints
-    // the table of data.
-    rl.on('close', (): void => {
-      customerList.sort(answers.sortBy, answers.sortOrder === 'asc');
-      customerList.printTable();
-      process.exit(0);
-    });
-  } catch(_e) {
-    process.exit(1);
-  }
-}
-
 // Uses the inquirer library to prompt the user for input.
 async function askQuestions(): Promise<Answers> {
   const questions = [
@@ -142,6 +75,85 @@ async function askQuestions(): Promise<Answers> {
   ];
 
   return inquirer.prompt(questions);
-};
+}
+
+async function main(): Promise<void> {
+  try {
+    let answers: Answers;
+
+    // If the program is run with additional flags, this prevents the program
+    // from running in interactive mode. The flags will determine how the data
+    // is displayed.
+    // This is primarily for automated testing purposes.
+    if (process.argv.length > 2) {
+      const filenameIndex = process.argv.indexOf('-f') + 1;
+      const includesHeadersIndex = process.argv.indexOf('-h') + 1;
+      const sortByIndex = process.argv.indexOf('-s') + 1;
+
+      const filename = process.argv[filenameIndex];
+      const includesHeaders = process.argv[includesHeadersIndex].toLowerCase() === 'y';
+      const sortBy = process.argv[sortByIndex] || CustomerList.sortByOptions.CUSTOMER_NAME;
+
+      answers = {
+        filename,
+        includesHeaders,
+        sortBy,
+        sortOrder: 'asc',
+      } as Answers;
+    } else {
+      answers = await askQuestions();
+    }
+
+    const input: fs.ReadStream = fs.createReadStream(answers.filename);
+    const rl: readline.Interface = readline.createInterface({ input });
+
+    const customerList: ICustomerList = new CustomerList();
+    let headers: string[] | null = !answers.includesHeaders ? VALID_HEADERS : null;
+    let delimiter: string;
+
+    // Reads the data file line-by-line and adds the resulting customer to the
+    // customer list.
+    rl.on('line', (line: string): void => {
+      if (!delimiter) {
+        delimiter = getDelimiter(line);
+      }
+
+      const lineData: string[] = line.split(delimiter);
+
+      if (!headers) {
+        headers = lineData;
+        validateHeaders(headers);
+        return;
+      }
+
+      const rawData: RawCustomerData = objectFromLine(headers, lineData) as RawCustomerData;
+
+      const vehicle: IVehicle = new Vehicle(
+        rawData.vehicleName,
+        rawData.vehicleType,
+        rawData.vehicleLength,
+      );
+
+      const customer: ICustomer = new Customer(
+        rawData.firstName,
+        rawData.lastName,
+        rawData.email,
+        vehicle,
+      );
+
+      customerList.addCustomer(customer);
+    });
+
+    // When the end of the file is reached, sorts the customer list and prints
+    // the table of data.
+    rl.on('close', (): void => {
+      customerList.sort(answers.sortBy, answers.sortOrder === 'asc');
+      customerList.printTable();
+      process.exit(0);
+    });
+  } catch (_e) {
+    process.exit(1);
+  }
+}
 
 main();
