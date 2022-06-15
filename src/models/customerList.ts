@@ -10,6 +10,14 @@ export interface ICustomerList {
 }
 
 export class CustomerList implements ICustomerList {
+  static sortByOptions = {
+    CUSTOMER_NAME: 'customerName',
+    CUSTOMER_EMAIL: 'customerEmail',
+    VEHICLE_TYPE: 'vehicleType',
+    VEHICLE_NAME: 'vehicleName',
+    VEHICLE_LENGTH: 'vehicleLength',
+  };
+
   customers: ICustomer[];
 
   constructor() {
@@ -22,15 +30,15 @@ export class CustomerList implements ICustomerList {
 
   sort(sortBy: string = 'customerName', asc = true): void {
     const comparePropFn = (customer: ICustomer) => {
-      if (sortBy === 'vehicleType') {
+      if (sortBy === CustomerList.sortByOptions.VEHICLE_TYPE) {
         return customer.vehicle.typeName.toLowerCase();
-      } else if (sortBy === 'vehicleName') {
+      } else if (sortBy === CustomerList.sortByOptions.VEHICLE_TYPE) {
         return customer.vehicle.name.toLowerCase();
-      } else if (sortBy === 'vehicleLength') {
+      } else if (sortBy === CustomerList.sortByOptions.VEHICLE_LENGTH) {
         // Currently only able to reliably sort by vehicle length when all
         // vehicle lengths use the same unit of measurement.
         return customer.vehicle.lengthQuantity;
-      } else if (sortBy === 'customerEmail') {
+      } else if (sortBy === CustomerList.sortByOptions.CUSTOMER_EMAIL) {
         return customer.email.toLowerCase();
       } else {
         return customer.fullName.toLowerCase();

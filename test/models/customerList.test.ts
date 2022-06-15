@@ -111,7 +111,7 @@ describe('CustomerList', () => {
       const spy = sinon.spy(console, 'log');
       customerList.printTable();
 
-      expect(spy.called).to.be.true;
+      expect(spy.calledOnce).to.be.true;
     });
   });
 });

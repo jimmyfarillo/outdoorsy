@@ -4,8 +4,9 @@
   "description": "Code project for The Wanderlust Group",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.test.ts",
-    "build": "tsc"
+    "test": "mocha -r ts-node/register test/*.test.ts test/**/*.test.ts",
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js"
   },
   "author": "",
   "license": "ISC",

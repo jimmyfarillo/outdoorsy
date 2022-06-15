@@ -6,20 +6,17 @@ import * as inquirer from 'inquirer';
 import { Customer, ICustomer } from './models/customer';
 import { CustomerList, ICustomerList } from './models/customerList';
 import { IVehicle, Vehicle } from './models/vehicle';
+import { VALID_HEADERS } from './validHeaders';
 
-const DEFAULT_HEADERS = [
-  'firstName',
-  'lastName',
-  'email',
-  'vehicleType',
-  'vehicleName',
-  'vehicleLength',
-];
-
-const VALID_DELIMITERS = [',', '|'];
+import {
+  getDelimiter,
+  objectFromLine,
+  validateHeaders,
+} from './utils';
 
 type Answers = {
   filename: string;
+  includesHeaders: boolean;
   sortBy: string;
 };
 
@@ -33,71 +30,79 @@ type RawCustomerData = {
 };
 
 async function main(): Promise<void> {
-  const answers: Answers = await askQuestions();
-  const input: fs.ReadStream = fs.createReadStream(answers.filename);
-  const rl: readline.Interface = readline.createInterface({ input });
+  try {
+    let answers: Answers;
 
-  const customerList: ICustomerList = new CustomerList();
-  let delimiter: string;
+    if (process.argv.length > 2) {
+      const filenameIndex = process.argv.indexOf('-f') + 1;
+      const includesHeadersIndex = process.argv.indexOf('-h') + 1;
+      const sortByIndex = process.argv.indexOf('-s') + 1;
 
-  rl.on('line', (line: string): void => {
-    if (!delimiter) {
-      delimiter = getDelimiter(line);
+      const filename = process.argv[filenameIndex];
+      const includesHeaders = process.argv[includesHeadersIndex].toLowerCase() === 'y' ? true : false;
+      const sortBy = process.argv[sortByIndex] || CustomerList.sortByOptions.CUSTOMER_NAME;
+
+      answers = { filename, includesHeaders, sortBy } as Answers;
+    } else {
+      answers = await askQuestions();
     }
 
-    const lineData: string[] = line.split(delimiter);
-    const rawData: RawCustomerData = customerDataFromLineData(lineData);
-    const vehicle: IVehicle = new Vehicle(rawData.vehicleName, rawData.vehicleType, rawData.vehicleLength);
-    const customer: ICustomer = new Customer(rawData.firstName, rawData.lastName, rawData.email, vehicle);
-    customerList.addCustomer(customer);
-  });
+    const input: fs.ReadStream = fs.createReadStream(answers.filename);
+    const rl: readline.Interface = readline.createInterface({ input });
 
-  rl.on('close', (): void => {
-    customerList.sort(answers.sortBy);
-    customerList.printTable();
-    process.exit(0);
-  });
-}
+    const customerList: ICustomerList = new CustomerList();
+    let headers: string[] | null = !answers.includesHeaders ? VALID_HEADERS : null;
+    let delimiter: string;
 
-function getFilename(args: string[]): string {
-  const filename: string = args[2];
+    rl.on('line', (line: string): void => {
+      if (!delimiter) {
+        delimiter = getDelimiter(line);
+      }
 
-  if (!filename.endsWith('.txt')) {
-    throw `Filename must end with '.txt': ${filename}`;
+      const lineData: string[] = line.split(delimiter);
+
+      if (!headers) {
+        headers = lineData;
+        validateHeaders(headers);
+        return;
+      }
+
+      const rawData: RawCustomerData = objectFromLine(headers, lineData) as RawCustomerData;
+      const vehicle: IVehicle = new Vehicle(rawData.vehicleName, rawData.vehicleType, rawData.vehicleLength);
+      const customer: ICustomer = new Customer(rawData.firstName, rawData.lastName, rawData.email, vehicle);
+      customerList.addCustomer(customer);
+    });
+
+    rl.on('close', (): void => {
+      customerList.sort(answers.sortBy);
+      customerList.printTable();
+      process.exit(0);
+    });
+  } catch(_e) {
+    process.exit(1);
   }
-
-  return filename;
 }
 
-function getDelimiter(line: string): string {
-  const delimiter = VALID_DELIMITERS.find((d) => line.includes(d));
-
-  if (!delimiter) {
-    throw 'Valid data delimiter not found';
-  }
-
-  return delimiter;
-}
-
-function customerDataFromLineData(lineData: string[], headers: string[] = DEFAULT_HEADERS): RawCustomerData {
-  if (lineData.length !== headers.length) {
-    throw `Invalid data: ${lineData}`;
-  }
-
-  return lineData.reduce((obj, data, i) => {
-    return {
-      ...obj,
-      [headers[i]]: data,
-    };
-  }, {}) as RawCustomerData;
-}
 
 async function askQuestions(): Promise<Answers> {
   const questions = [
     {
-      name: 'filename',
       type: 'input',
+      name: 'filename',
       message: 'What is the full path to the file?',
+      validate: (filename: string): boolean | string => {
+        if (fs.existsSync(filename)) {
+          return true;
+        }
+
+        return 'Invalid filename';
+      },
+    },
+    {
+      type: 'confirm',
+      name: 'includesHeaders',
+      message: 'Is the first line of the file the headers?',
+      default: false,
     },
     {
       type: 'list',
@@ -115,5 +120,6 @@ async function askQuestions(): Promise<Answers> {
 
   return inquirer.prompt(questions);
 };
+
 
 main();

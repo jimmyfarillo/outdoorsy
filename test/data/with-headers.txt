@@ -1,0 +1,3 @@
+lastName,firstName,vehicleName,email,vehicleLength,vehicleType
+Thunberg,Greta,Fridays For Future,greta@future.com,32’,sailboat
+Martinez,Xiuhtezcatl,Earth Guardian,martinez@earthguardian.org,28 feet,campervan
