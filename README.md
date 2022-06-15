@@ -8,6 +8,19 @@ customer data.
 _Completed as a code project for The Wanderlust Group interview process._
 
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Running The Program](#running-the-program)
+- [Build](#build)
+- [Testing](#testing)
+- [About This Solution](#about-this-solution)
+  - [Overview](#overview)
+  - [Assumptions](#assumptions)
+  - [Additional Features](#additional-features)
+  - [Technologies](#technologies)
+
+
 ## Installation
 
 ### 1. Install Node.js v16
@@ -19,7 +32,9 @@ brew install node@16
 
 You could also download and run the v16 installer package from [https://nodejs.org/en/](https://nodejs.org/en/).
 
-### 2. Install Dependencies
+### 2. Clone this repo
+
+### 3. Install Dependencies
 
 From the root directory of the project, run the following command:
 ```
