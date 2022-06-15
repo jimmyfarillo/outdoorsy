@@ -53,7 +53,7 @@ async function main(): Promise<void> {
   });
 
   rl.on('close', (): void => {
-    customerList.sort({ sortBy: answers.sortBy });
+    customerList.sort(answers.sortBy);
     customerList.printTable();
     process.exit(0);
   });

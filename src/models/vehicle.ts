@@ -1,4 +1,4 @@
-enum VehicleLengthUnitEnum {
+export enum VehicleLengthUnitEnum {
   FEET = "ft",
   METERS = "m",
 }
@@ -14,7 +14,7 @@ const VEHICLE_LENGTH_UNIT_MAP = new Map([
   ['meter', VehicleLengthUnitEnum.METERS],
 ]);
 
-enum VehicleTypeEnum {
+export enum VehicleTypeEnum {
   BICYCLE = 'bicycle',
   CAMPERVAN = 'campervan',
   MOTORBOAT = 'motorboat',
@@ -52,7 +52,7 @@ export class Vehicle implements IVehicle {
   }
 
   get length() {
-    return `${this.lengthQuantity} ${this.lengthUnit}`;
+    return `${this.lengthQuantity}${this.lengthUnit ? ` ${this.lengthUnit}`: ''}`;
   }
 
   private parseLengthQuantity(lengthString: string): number {

@@ -5,26 +5,22 @@ import { ICustomer } from './customer';
 export interface ICustomerList {
   customers: ICustomer[];
   addCustomer: (customer: ICustomer) => void;
-  sort: ({ sortBy }: { sortBy: string }) => void;
+  sort: (sortBy?: string, asc?: boolean) => void;
   printTable: () => void;
 }
 
 export class CustomerList implements ICustomerList {
-  private _customers: ICustomer[];
+  customers: ICustomer[];
 
   constructor() {
-    this._customers = [];
+    this.customers = [];
   }
 
   addCustomer(customer: ICustomer): void {
-    this._customers.push(customer);
+    this.customers.push(customer);
   }
 
-  get customers() {
-    return this._customers;
-  }
-
-  sort({ sortBy }: { sortBy: string } = { sortBy: 'customerName' }): void {
+  sort(sortBy: string = 'customerName', asc = true): void {
     const comparePropFn = (customer: ICustomer) => {
       if (sortBy === 'vehicleType') {
         return customer.vehicle.typeName.toLowerCase();
@@ -41,14 +37,14 @@ export class CustomerList implements ICustomerList {
       }
     };
 
-    this._customers.sort((customerA: ICustomer, customerB: ICustomer) => {
+    this.customers.sort((customerA: ICustomer, customerB: ICustomer) => {
       const a = comparePropFn(customerA);
       const b = comparePropFn(customerB);
 
       if (a < b) {
-        return -1;
+        return asc ? -1 : 1;
       } else if (a > b) {
-        return 1;
+        return asc ? 1 : -1;
       }
 
       return 0;
