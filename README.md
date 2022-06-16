@@ -90,7 +90,7 @@ npm test
 
 ## About This Solution
 
-## Overview
+### Overview
 
 I attempted to break this problem down into classes that encapsulate the data
 and behavior of their real-world couterparts. This resulted in three main
@@ -109,7 +109,7 @@ people. By creating the `Vehicle` class, when/if the need arises to represent
 this many-to-many relationship in the system then the code is already setup
 to facilitate this change.
 
-## Assumptions
+### Assumptions
 
 Some assumptions I made to arrive at this completed solution:
 - Data files will not contain a mix of different delimiters.
@@ -119,7 +119,7 @@ sorting and interacting with the data -- the program exits right after printing
 the customer data.
 - Customer name follows the Western format of "first_name last_name".
 
-## Additional Features
+### Additional Features
 
 Some additional features implemented that are not outlined in the project
 requirements:
